@@ -120,8 +120,15 @@ static bool solar_day_boundaries(int64_t unix_microseconds,
     }
     half_day_seconds =
         hour_angle * (long double)SECONDS_PER_DAY / (2.0L * INFILTRATR_PI);
-    *dawn_seconds = (long double)SECONDS_PER_DAY / 2.0L - half_day_seconds;
-    *dusk_seconds = (long double)SECONDS_PER_DAY / 2.0L + half_day_seconds;
+    /* Pre-Kansei dawn/dusk: 36 minutes before sunrise/after sunset.
+     * NAOJ: https://eco.mtk.nao.ac.jp/koyomi/wiki/ (夜明と日暮).
+     * .833 degrees defines sunrise/sunset; it is not itself dawn/dusk. */
+    *dawn_seconds = (long double)SECONDS_PER_DAY / 2.0L -
+                    half_day_seconds - 2160.0L;
+    *dusk_seconds = (long double)SECONDS_PER_DAY / 2.0L +
+                    half_day_seconds + 2160.0L;
+    if (*dawn_seconds <= 0.0L || *dusk_seconds >= SECONDS_PER_DAY)
+        return false;
     return true;
 }
 

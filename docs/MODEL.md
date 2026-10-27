@@ -9,7 +9,7 @@
 
 ## Maintained model
 
-Early Edo seasonal toki/bell hours with 0.833° sunrise/sunset boundaries.
+Pre-Kansei Edo seasonal toki/bell hours: dawn 36 minutes before sunrise and dusk 36 minutes after sunset, using a 0.833° sunrise/sunset model.
 
 ## Historical scope / fidelity limitation
 
@@ -29,7 +29,7 @@ Missing providers are unavailable; consumers must not substitute a different pro
 
 ## Provenance
 
-The model and boundary above are documented from the current resource build map, Calendar model matrix and Common historical-fidelity audit. They have not yet been independently requalified in this repository.
+The model and boundary above are documented from the current resource build map, Calendar model matrix and Common historical-fidelity audit. Independent qualification and unresolved limitations are now recorded in [the forensic audit](FORENSIC-AUDIT.md).
 
 - [Libraries/Common temporal sources](https://github.com/Infiltrator-Projects/Libraries/tree/main/resources/temporal)
 - [Current canonical build catalogue](https://github.com/Infiltrator-Projects/Libraries/blob/main/resources/temporal/Makefile)
@@ -40,3 +40,5 @@ The model and boundary above are documented from the current resource build map,
 ## Source copy status
 
 The model-specific implementation and required helpers are now copied into this repository. Its behaviour was compared with the original Common 1.19.78 provider; this adds copy-regression evidence, not a new independent historical audit. See [source provenance](../SOURCE.md) and [validation results](../VALIDATION-RESULTS.json). The original Common implementation remains in place.
+
+The forensic correction uses the pre-Kansei convention of dawn 36 minutes before sunrise and dusk 36 minutes after sunset. The former sunrise/sunset-only boundary was not historically faithful. See the NAOJ authority in the audit.

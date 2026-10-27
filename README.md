@@ -2,7 +2,7 @@
 
 **InfiltratorOS clock resource** · **Stable ID:** `japanese-temporal-early` · **Module:** `Early Edo Japanese Temporal Clock.so`
 
-Early Edo seasonal toki/bell hours with 0.833° sunrise/sunset boundaries.
+Pre-Kansei Edo seasonal toki/bell hours: dawn 36 minutes before sunrise and dusk 36 minutes after sunset, using a 0.833° sunrise/sunset model.
 
 **Historical scope/accuracy:** Different boundary from late Edo model; reconstruction from modern astronomy.
 
@@ -33,3 +33,7 @@ See [source provenance and build details](SOURCE.md), [source manifest](SOURCE-M
 - [Calendar chronology and clock models](https://github.com/Infiltrator-Projects/Calendar/blob/main/docs/MODELS.md)
 - [Historical fidelity audit](https://github.com/Infiltrator-Projects/Libraries/blob/main/docs/TEMPORAL_HISTORICAL_FIDELITY.md)
 - [Temporal discovery and executable provider ABI](https://github.com/Infiltrator-Projects/Libraries/blob/main/docs/TEMPORAL_PROVIDERS.md)
+
+## Independent forensic audit
+
+See [audit findings](docs/FORENSIC-AUDIT.md) for corrections, numerical-model limits and unresolved authority disagreements. A successful build is not a historical-accuracy certificate.
