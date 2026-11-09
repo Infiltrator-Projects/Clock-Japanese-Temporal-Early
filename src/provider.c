@@ -214,9 +214,6 @@ static bool mode_location_valid(const InfiltratrTemporalClockModeInfo *info,
 
 /* Names are transliterated proper names, not animal/help labels. Wording
  * belongs to the selected language; the shared phase calculation stays below. */
-#define CLOCK_REMAINING_WORDS(hour, watch, twelfth, twelfths) \
-    { "hour", hour }, { "watch", watch }, \
-    { "twelfth", twelfth }, { "twelfths", twelfths }
 #define JAPANESE_BRANCHES \
     { "jp-ne", "Ne" }, { "jp-ushi", "Ushi" }, { "jp-tora", "Tora" }, \
     { "jp-u", "U" }, { "jp-tatsu", "Tatsu" }, { "jp-mi", "Mi" }, \
@@ -277,7 +274,6 @@ static const InfiltratrI18nEntry clock_ko[] = {
     /* Other specialized-clock wording keeps the documented English fallback. */
     EDO_WORDS("{branch} · {bell}타", "{branch}\n{bell}타"),
 };
-#undef CLOCK_REMAINING_WORDS
 #undef JAPANESE_BRANCHES
 #undef JAPANESE_NATIVE_BRANCHES
 #undef EDO_WORDS
@@ -326,7 +322,7 @@ static bool format_clock_mode(const InfiltratrI18n *language,
                                            size_t capacity,
                                            size_t *length)
 {
-    (void)mode; (void)show_seconds;
+    (void)show_seconds;
     const InfiltratrTemporalClockModeInfo *info;
 
     // The extension modes use absolute instants and, when applicable, the
@@ -348,58 +344,47 @@ static bool format_clock_mode(const InfiltratrI18n *language,
         return false;
     }
 
-    ;
+    typedef struct JapaneseToki {
+        const char *character;
+        const char *bell;
+        const char *key;
+    } JapaneseToki;
+    static const JapaneseToki day_toki[] = {
+        { "卯", "六", "jp-u" }, { "辰", "五", "jp-tatsu" },
+        { "巳", "四", "jp-mi" }, { "午", "九", "jp-uma" },
+        { "未", "八", "jp-hitsuji" }, { "申", "七", "jp-saru" }
+    };
+    static const JapaneseToki night_toki[] = {
+        { "酉", "六", "jp-tori" }, { "戌", "五", "jp-inu" },
+        { "亥", "四", "jp-i" }, { "子", "九", "jp-ne" },
+        { "丑", "八", "jp-ushi" }, { "寅", "七", "jp-tora" }
+    };
+    const double depression =
+        0.833;
+    SeasonalPeriod period;
+    const JapaneseToki *toki;
 
-    {
-        typedef struct JapaneseToki {
-            const char *character;
-            const char *bell;
-            const char *key;
-        } JapaneseToki;
-        static const JapaneseToki day_toki[] = {
-            { "卯", "六", "jp-u" }, { "辰", "五", "jp-tatsu" },
-            { "巳", "四", "jp-mi" }, { "午", "九", "jp-uma" },
-            { "未", "八", "jp-hitsuji" }, { "申", "七", "jp-saru" }
-        };
-        static const JapaneseToki night_toki[] = {
-            { "酉", "六", "jp-tori" }, { "戌", "五", "jp-inu" },
-            { "亥", "四", "jp-i" }, { "子", "九", "jp-ne" },
-            { "丑", "八", "jp-ushi" }, { "寅", "七", "jp-tora" }
-        };
-        const double depression =
-            0.833;
-        SeasonalPeriod period;
-        const JapaneseToki *toki;
-
-        if (!seasonal_period_at(
-                unix_microseconds, latitude, longitude,
-                depression, 6U, 6U, &period)) {
-            return write_text(
-                buffer, capacity, length,
-                vertical ? "N/A\n和時" : "N/A 和時");
-        }
-        toki = period.daylight
-            ? &day_toki[period.index]
-            : &night_toki[period.index];
-        if (language != NULL) {
-            const InfiltratrI18nArgument arguments[] = {
-                { "branch", infiltratr_i18n_get(language, toki->key) },
-                { "bell", toki->bell }
-            };
-            return write_localized(buffer, capacity, length,
-                infiltratr_i18n_get(language, vertical ? "edo-vertical" : "edo"),
-                arguments, sizeof(arguments) / sizeof(arguments[0]));
-        }
-        return finish_output(buffer, capacity, length,
-            snprintf(buffer, capacity, vertical ? "%sの刻\n%sつ" : "%sの刻 · %sつ", toki->character, toki->bell));
+    if (!seasonal_period_at(
+            unix_microseconds, latitude, longitude,
+            depression, 6U, 6U, &period)) {
+        return write_text(
+            buffer, capacity, length,
+            vertical ? "N/A\n和時" : "N/A 和時");
     }
-
-    ;
-
-    ;
-
-    return false;
-}
+    toki = period.daylight
+        ? &day_toki[period.index]
+        : &night_toki[period.index];
+    if (language != NULL) {
+        const InfiltratrI18nArgument arguments[] = {
+            { "branch", infiltratr_i18n_get(language, toki->key) },
+            { "bell", toki->bell }
+        };
+        return write_localized(buffer, capacity, length,
+            infiltratr_i18n_get(language, vertical ? "edo-vertical" : "edo"),
+            arguments, sizeof(arguments) / sizeof(arguments[0]));
+    }
+    return finish_output(buffer, capacity, length,
+        snprintf(buffer, capacity, vertical ? "%sの刻\n%sつ" : "%sの刻 · %sつ", toki->character, toki->bell));}
 
 static bool seasonal_format_clock_mode(const char *mode,
     int64_t unix_microseconds, int32_t utc_offset_seconds,
@@ -407,7 +392,6 @@ static bool seasonal_format_clock_mode(const char *mode,
     double latitude, double longitude,
     char *buffer, size_t capacity, size_t *length)
 {
-    (void)mode;
     return format_clock_mode(NULL, mode, unix_microseconds, utc_offset_seconds,
         show_seconds, vertical, location_configured, latitude, longitude,
         buffer, capacity, length);
@@ -420,7 +404,6 @@ static bool seasonal_format_clock_mode_localized(
     double latitude, double longitude,
     char *buffer, size_t capacity, size_t *length)
 {
-    (void)mode;
     InfiltratrI18n language;
     if (!infiltratr_i18n_init(&language, clock_catalogs,
             sizeof(clock_catalogs) / sizeof(clock_catalogs[0]), "en")) {

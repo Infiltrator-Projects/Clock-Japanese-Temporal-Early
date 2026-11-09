@@ -31,7 +31,7 @@ CFLAGS += -std=c11 -fPIC -fvisibility=hidden -ffunction-sections -fdata-sections
 LDLIBS += $(DEP_LIBS) -lm -ldl -pthread
 .PHONY: common-check
 common-check:
-	@if test ! -f common/VERSION; then git submodule update --init --depth 1 -- common; fi
+	@test -f common/VERSION || { echo "Missing pinned Common submodule; run: git submodule update --init -- common" >&2; exit 1; }
 	@grep -qx "$(COMMON_VERSION)" common/VERSION
 	@if test -e common/.git; then git -C common rev-parse HEAD | grep -qx "$(COMMON_REVISION)"; fi
 	@test ! -d include/infiltratr || { echo "Copied Common headers forbidden" >&2; exit 1; }

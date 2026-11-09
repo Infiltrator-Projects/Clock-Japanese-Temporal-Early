@@ -12,7 +12,7 @@ This repository now contains its own implementation of provider `japanese-tempor
 - **Native resource path:** `/System/Resources/Clocks/Early Edo Japanese Temporal Clock.so`.
 - **Original Common code:** retained unchanged. The original extraction was a copy, not a removal. Independent packaging now transfers only this installed module through dpkg; Common source remains retained.
 
-Combined source files were selected for this provider and split by keeping its existing operations, data and required helper definitions. Inactive provider branches and unreachable definitions were removed. Shared arithmetic, formatting, localization and runtime-bridge helpers are intentionally copied into every repository that needs them. The local build uses only this repository's source and platform dependencies; it does not fetch or link a Common checkout/archive.
+Combined source files were selected for this provider and split by keeping its existing operations, data and required helper definitions. Inactive provider branches and unreachable definitions were removed. Shared arithmetic, formatting, localization and runtime-bridge helpers are intentionally copied into every repository that needs them. The local build uses this repository's provider source and links the pinned Common static archive. The Common checkout must be initialised explicitly; `make` does not fetch it.
 
 Public Common ABI headers retain compatibility declarations. Those declarations do not install or implement the other providers. The built module exports only its metadata entry and its `clock` operation-table entry. Existing notices and the original GPL license are retained.
 
@@ -20,7 +20,7 @@ Public Common ABI headers retain compatibility declarations. Those declarations 
 
 ## Build and check
 
-Use a C11 compiler, GNU Make, Python 3 and pkg-config. Development packages required by this copy: no GLib or ICU development dependency.
+Use a C11 compiler, GNU Make and the pinned Common submodule. Development packages required by this copy: no GLib or ICU development dependency.
 
 ```sh
 make
