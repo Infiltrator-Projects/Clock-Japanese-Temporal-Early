@@ -384,7 +384,8 @@ static bool format_clock_mode(const InfiltratrI18n *language,
             arguments, sizeof(arguments) / sizeof(arguments[0]));
     }
     return finish_output(buffer, capacity, length,
-        snprintf(buffer, capacity, vertical ? "%sの刻\n%sつ" : "%sの刻 · %sつ", toki->character, toki->bell));}
+        snprintf(buffer, capacity, vertical ? "%sの刻\n%sつ" : "%sの刻 · %sつ", toki->character, toki->bell));
+}
 
 static bool seasonal_format_clock_mode(const char *mode,
     int64_t unix_microseconds, int32_t utc_offset_seconds,
