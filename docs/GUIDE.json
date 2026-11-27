@@ -5,11 +5,12 @@
   "example": "If the model's sunrise and sunset are 06:00 and 18:00 apparent solar time, dawn and dusk are 05:24 and 18:36. Each daylight toki is 132 minutes, so the transition from U to Tatsu is 07:36. Each night toki is 108 minutes.",
   "history": "The early Edo profile represents the pre-Kansei Japanese dawn/dusk convention. It differs from the later model based on a specified solar depression angle, even though both use the same branch/bell sequence.",
   "model": "Use solar declination and a 0.833-degree horizon correction to compute sunrise/sunset in apparent solar coordinates. Extend the day by 2160 seconds on each side, reject boundaries at or beyond midnight, then divide each day/night span into six. Render the localised branch and bell count and schedule the next visible boundary.",
-  "limits": "No seconds subdivisions are offered. Requires valid latitude and longitude; impossible crossings or invalid extended day boundaries produce N/A. The calculations are a modern reconstruction and not observations of an individual historical instrument.",
+  "limits": "No seconds subdivisions are offered. Requires valid latitude and longitude; impossible crossings or invalid extended day boundaries produce N/A. The calculations are a modern reconstruction and not observations of an individual historical instrument. The solar model assumes an idealised sea-level horizon and standard depression; local terrain and weather are not modelled.",
   "sources": [
     "Historical convention: https://eco.mtk.nao.ac.jp/koyomi/wiki/",
     "Implementation: https://github.com/Infiltrator-Projects/Clock-Japanese-Temporal-Early/blob/main/src/provider.c",
     "Model evidence: https://github.com/Infiltrator-Projects/Clock-Japanese-Temporal-Early/blob/main/docs/MODEL.md",
-    "Shared contract: https://github.com/Infiltrator-Projects/Libraries/blob/main/docs/TEMPORAL_PROVIDERS.md"
+    "Shared contract: https://github.com/Infiltrator-Projects/Libraries/blob/main/docs/TEMPORAL_PROVIDERS.md",
+    "Historical qualification: https://github.com/Infiltrator-Projects/Clock-Japanese-Temporal-Early/blob/main/docs/FORENSIC-AUDIT.md"
   ]
 }
